@@ -18,26 +18,23 @@ import { attachBasicClickSound } from "@/lib/basic-click-sound";
 
 function NotFoundComponent() {
   return (
-    <SiteShell>
-      <div className="container-page py-32 text-center">
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">Error 404</p>
-        <h1 className="mt-4 text-6xl md:text-8xl font-bold tracking-tight">Page not found</h1>
-        <p className="mt-4 text-muted-foreground max-w-md mx-auto">
-          The page you were looking for may have moved, or you may have entered a wrong link. Please return to the homepage or contact {site.name} directly.
-        </p>
-        <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <Link to="/" className="inline-flex items-center rounded-full gradient-teal px-6 py-3 text-sm font-semibold text-white shadow-soft">
-            Back home
-          </Link>
-          <Link to="/contact" className="inline-flex items-center rounded-full border border-border px-6 py-3 text-sm font-semibold text-foreground">
-            Contact clinic
-          </Link>
-        </div>
+    <div className="container-page py-32 text-center">
+      <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">Error 404</p>
+      <h1 className="mt-4 text-6xl md:text-8xl font-bold tracking-tight">Page not found</h1>
+      <p className="mt-4 text-muted-foreground max-w-md mx-auto">
+        The page you were looking for may have moved, or you may have entered a wrong link. Please return to the homepage or contact {site.name} directly.
+      </p>
+      <div className="mt-8 flex flex-wrap justify-center gap-3">
+        <Link to="/" className="inline-flex items-center rounded-full gradient-teal px-6 py-3 text-sm font-semibold text-white shadow-soft">
+          Back home
+        </Link>
+        <Link to="/contact" className="inline-flex items-center rounded-full border border-border px-6 py-3 text-sm font-semibold text-foreground">
+          Contact clinic
+        </Link>
       </div>
-    </SiteShell>
+    </div>
   );
 }
-
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
@@ -46,19 +43,17 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   }, [error]);
 
   return (
-    <SiteShell>
-      <div className="container-page py-32 text-center">
-        <h1 className="text-3xl font-bold">Something went wrong</h1>
-        <p className="mt-3 text-muted-foreground">Please try again in a moment.</p>
-        <div className="mt-6 flex gap-3 justify-center">
-          <button
-            onClick={() => { router.invalidate(); reset(); }}
-            className="rounded-full gradient-teal px-6 py-3 text-sm font-semibold text-white"
-          >Try again</button>
-          <a href="/" className="rounded-full border border-border px-6 py-3 text-sm font-semibold">Go home</a>
-        </div>
+    <div className="container-page py-32 text-center">
+      <h1 className="text-3xl font-bold">Something went wrong</h1>
+      <p className="mt-3 text-muted-foreground">Please try again in a moment.</p>
+      <div className="mt-6 flex gap-3 justify-center">
+        <button
+          onClick={() => { router.invalidate(); reset(); }}
+          className="rounded-full gradient-teal px-6 py-3 text-sm font-semibold text-white"
+        >Try again</button>
+        <a href="/" className="rounded-full border border-border px-6 py-3 text-sm font-semibold">Go home</a>
       </div>
-    </SiteShell>
+    </div>
   );
 }
 
