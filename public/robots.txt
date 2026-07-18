@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://arnavphysiotherapy.com/sitemap.xml
+Sitemap: https://arnavpyhsiotherapy.com/sitemap.xml

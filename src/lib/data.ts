@@ -17,6 +17,8 @@ import cuppingTherapyImage from "../assets/services/CuppingTherapy.jpg";
 import womensHealthImage from "../assets/services/WomenHealthPhysiotherapy.jpg";
 import neurologicalPhysiotherapyImage from "../assets/services/NeurologicalPhysiotherapy.jpg";
 import waxTherapyImage from "../assets/gallery/wax.png";
+
+
 export const services: Service[] = [
   {
     slug: "manual-therapy",

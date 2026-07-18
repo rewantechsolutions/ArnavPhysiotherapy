@@ -19,7 +19,7 @@ export const site = {
   formspreeContact: "https://formspree.io/f/mojgekjv",
   formspreeAppointment: "https://formspree.io/f/xpqvpyqp",
   social: {
-    instagram: "https://www.instagram.com/arnavphysiotherapy?igsh=amFiaGM2cWwxNTFo&utm_source=qr",
+    instagram: "https://www.instagram.com/arnavpyhsiotherapy?igsh=amFiaGM2cWwxNTFo&utm_source=qr",
     facebook: "https://www.facebook.com/share/1E7FUhtpza/?mibextid=wwXIfr",
   },
 };

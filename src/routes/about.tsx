@@ -16,7 +16,7 @@ export const Route = createFileRoute("/about")({
       { property: "og:title", content: "About Arnav Physiotherapy Centre — Jhansi" },
       { property: "og:description", content: "A modern, evidence-based rehabilitation practice in Jhansi with a human-centred approach to recovery." },
     ],
-    links: [{ rel: "canonical", href: "https://arnavphysiotherapy.com/about" }],
+    links: [{ rel: "canonical", href: "https://arnavpyhsiotherapy.com/about" }],
   }),
   component: AboutPage,
 });

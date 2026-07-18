@@ -11,7 +11,7 @@ export const Route = createFileRoute("/conditions/")({
       { title: "Conditions We Treat — Arnav Physiotherapy Jhansi" },
       { name: "description", content: "From back pain and sciatica to stroke rehab and sports injuries, see the full list of conditions treated by Arnav Physiotherapy Centre in Jhansi." },
     ],
-    links: [{ rel: "canonical", href: "https://arnavphysiotherapy.com/conditions" }],
+    links: [{ rel: "canonical", href: "https://arnavpyhsiotherapy.com/conditions" }],
   }),
   component: ConditionsPage,
 });

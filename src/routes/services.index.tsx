@@ -11,7 +11,7 @@ export const Route = createFileRoute("/services/")({
       { title: "Physiotherapy Services in Jhansi — Arnav Physio" },
       { name: "description", content: "Explore physiotherapy services in Jhansi for manual therapy, exercise therapy, dry needling, electrotherapy, shockwave therapy, wax therapy and neuro rehab." },
     ],
-    links: [{ rel: "canonical", href: "https://arnavphysiotherapy.com/services" }],
+    links: [{ rel: "canonical", href: "https://arnavpyhsiotherapy.com/services" }],
   }),
   component: ServicesPage,
 });
