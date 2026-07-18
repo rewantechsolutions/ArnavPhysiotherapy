@@ -7,6 +7,7 @@ import {
 import { site, nav } from "@/lib/site";
 import { services, conditions } from "@/lib/data";
 import logo from "../../assets/logo.png";
+// import logo from "../../assets/logo.png";
 
 export function Footer() {
   const year = new Date().getFullYear();
