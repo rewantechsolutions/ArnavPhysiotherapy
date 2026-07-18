@@ -1,0 +1,16 @@
+{
+  "name": "Arnav Physiotherapy Centre",
+  "short_name": "Arnav Physio",
+  "description": "Evidence-based physiotherapy and rehabilitation services in Jhansi.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563EB",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Arnav Physiotherapy Centre logo">
+  <rect width="64" height="64" rx="16" fill="#2563EB"/>
+  <path d="M18 24h10c7 0 12 4 12 11 0 8-5 13-12 13H18z" fill="#ffffff" opacity="0.95"/>
+  <path d="M24 20h8c7 0 12 4 12 11 0 8-5 13-12 13h-8z" fill="#22d3ee" opacity="0.95"/>
+  <path d="M34 20h12v24H34z" fill="#ffffff" opacity="0.9"/>
+  <circle cx="40" cy="18" r="5" fill="#ffffff" opacity="0.95"/>
+</svg>
