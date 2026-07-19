@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
-import { useRef, type ReactNode } from "react";
+import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { Home, ChevronRight, Sparkles } from "lucide-react";
 
 // Unified single-theme (teal) page hero across all routes.
@@ -25,6 +25,16 @@ export function PageHero({
   children?: ReactNode;
 }) {
   const heroRef = useRef<HTMLElement>(null);
+  const [isMobile, setIsMobile] = useState(() => (typeof window !== "undefined" ? window.innerWidth < 768 : false));
+
+  useLayoutEffect(() => {
+    if (typeof window === "undefined") return;
+    const mediaQuery = window.matchMedia("(max-width: 767px)");
+    const onChange = () => setIsMobile(mediaQuery.matches);
+    onChange();
+    mediaQuery.addEventListener("change", onChange);
+    return () => mediaQuery.removeEventListener("change", onChange);
+  }, []);
 
   // Track how far the hero has scrolled past the top of the viewport.
   // progress 0  -> hero sits fully in view, right at the top of the page
@@ -46,8 +56,8 @@ export function PageHero({
   return (
     <motion.section
       ref={heroRef}
-      className="relative overflow-hidden"
-      style={{
+      className="relative overflow-hidden hero-mobile-bleed"
+      style={isMobile ? undefined : {
         marginLeft: marginX,
         marginRight: marginX,
         marginTop: marginY,

@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { motion, AnimatePresence, useScroll, useTransform, useSpring } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Search, ArrowRight, ChevronLeft, ChevronRight, Sparkles, ShieldCheck, Award } from "lucide-react";
 import { services } from "@/lib/data";
 import hero1 from "../../assets/hero1.jpg";
@@ -82,6 +82,7 @@ export function Hero() {
   const [cycle, setCycle] = useState(0);
   const [query, setQuery] = useState("");
   const [service, setService] = useState("all");
+  const [isMobile, setIsMobile] = useState(() => (typeof window !== "undefined" ? window.innerWidth < 768 : false));
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const typedWord = useTypewriter(rotating);
@@ -90,6 +91,15 @@ export function Hero() {
     setI(next);
     setCycle((c) => c + 1); // restart the slide-progress bar animation
   };
+
+  useLayoutEffect(() => {
+    if (typeof window === "undefined") return;
+    const mediaQuery = window.matchMedia("(max-width: 767px)");
+    const onChange = () => setIsMobile(mediaQuery.matches);
+    onChange();
+    mediaQuery.addEventListener("change", onChange);
+    return () => mediaQuery.removeEventListener("change", onChange);
+  }, []);
 
   useEffect(() => {
     const t = setInterval(() => goTo((i + 1) % slides.length), SLIDE_DURATION);
@@ -115,8 +125,12 @@ export function Hero() {
 
   return (
     <motion.section
-      className="relative overflow-hidden"
-      style={{ marginLeft: marginX, marginRight: marginX, borderRadius: radius }}
+      className="relative overflow-hidden hero-mobile-bleed"
+      style={isMobile ? undefined : {
+        marginLeft: marginX,
+        marginRight: marginX,
+        borderRadius: radius,
+      }}
     >
       {/* Background — front and centre, only a soft scrim on top */}
       <div className="absolute inset-0 bg-[oklch(0.18_0.04_220)]" />
