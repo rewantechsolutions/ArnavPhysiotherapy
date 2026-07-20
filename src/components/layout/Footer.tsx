@@ -166,9 +166,9 @@ export function Footer() {
       <div className="absolute inset-0 opacity-[0.04] bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:24px_24px]" />
 
       {/* Newsletter band */}
-      <div className="relative border-b border-white/10">
+      <div className="relative border-b border-white/10 overflow-x-hidden">
         <div className="container-page py-10 grid gap-6 lg:grid-cols-2 lg:items-center">
-          <div>
+          <div className="min-w-0">
             <div className="text-[11px] font-bold uppercase tracking-[0.22em] text-primary-glow">
               Stay Informed
             </div>
@@ -177,7 +177,7 @@ export function Footer() {
             </h3>
           </div>
 
-          <div className="w-full">
+          <div className="w-full min-w-0">
             <NewsletterForm />
           </div>
         </div>
