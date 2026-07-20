@@ -1,13 +1,159 @@
+import { useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Instagram, Facebook, Mail, Phone, MapPin, Clock,
-  ArrowRight, Send, Heart, MessageCircle,
+  ArrowRight, Send, Heart, MessageCircle, CheckCircle2, AlertCircle,
 } from "lucide-react";
 import { site, nav } from "@/lib/site";
 import { services, conditions } from "@/lib/data";
 import logo from "../../assets/logo.png";
 // import logo from "../../assets/logo.png";
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+type Status = "idle" | "error" | "success";
+
+/**
+ * Newsletter subscribe form.
+ *
+ * There's no backend/API to actually store subscribers here, so "Subscribe"
+ * validates the address, then hands off to the visitor's own mail app via a
+ * `mailto:` link — pre-addressed to the clinic, with a subject/body that
+ * already contains the address they typed in. They just hit send from
+ * their own mail client.
+ */
+function NewsletterForm() {
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<Status>("idle");
+  const [errorMsg, setErrorMsg] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+  const resetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (status === "success") return; // avoid double-fire while mail app is opening
+
+    const value = email.trim();
+
+    if (!value) {
+      setStatus("error");
+      setErrorMsg("Please enter your email address.");
+      inputRef.current?.focus();
+      return;
+    }
+
+    if (!EMAIL_RE.test(value)) {
+      setStatus("error");
+      setErrorMsg("That doesn't look like a valid email address.");
+      inputRef.current?.focus();
+      return;
+    }
+
+    setStatus("success");
+    setErrorMsg("");
+
+    const subject = encodeURIComponent(`Newsletter Subscription — ${value}`);
+    const body = encodeURIComponent(
+      `Hi ${site.short} team,\n\nPlease subscribe me to the weekly recovery tips newsletter.\n\nMy email: ${value}\n\nThanks!`
+    );
+    window.location.href = `mailto:${site.email}?subject=${subject}&body=${body}`;
+
+    // Let the person see the confirmation, then reset the form for next time.
+    if (resetTimer.current) clearTimeout(resetTimer.current);
+    resetTimer.current = setTimeout(() => {
+      setStatus("idle");
+      setEmail("");
+    }, 4000);
+  };
+
+  return (
+    <div className="w-full">
+      <form
+        onSubmit={handleSubmit}
+        noValidate
+        className={`flex items-center gap-2 rounded-full bg-white/10 backdrop-blur border p-1.5 pl-5 shadow-glow transition-colors ${
+          status === "error" ? "border-red-400/60" : "border-white/20"
+        }`}
+      >
+        <Mail className={`h-4 w-4 shrink-0 ${status === "error" ? "text-red-300" : "text-white/50"}`} />
+        <input
+          ref={inputRef}
+          type="email"
+          inputMode="email"
+          autoComplete="email"
+          required
+          value={email}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            if (status === "error") setStatus("idle");
+          }}
+          placeholder="you@example.com"
+          aria-invalid={status === "error"}
+          aria-describedby="newsletter-error"
+          disabled={status === "success"}
+          className="bg-transparent flex-1 outline-none text-sm placeholder:text-white/40 text-white py-2 min-w-0 disabled:opacity-60"
+        />
+        <button
+          type="submit"
+          disabled={status === "success"}
+          className="inline-flex shrink-0 items-center gap-2 rounded-full gradient-teal px-5 py-2.5 text-sm font-semibold text-white shadow-soft hover:shadow-glow transition disabled:opacity-70 disabled:cursor-not-allowed"
+        >
+          <AnimatePresence mode="wait" initial={false}>
+            {status === "success" ? (
+              <motion.span
+                key="success"
+                initial={{ opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                className="inline-flex items-center gap-1.5"
+              >
+                <CheckCircle2 className="h-3.5 w-3.5" /> Opening mail…
+              </motion.span>
+            ) : (
+              <motion.span
+                key="idle"
+                initial={{ opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                className="inline-flex items-center gap-1.5"
+              >
+                Subscribe <Send className="h-3.5 w-3.5" />
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </button>
+      </form>
+
+      <div className="min-h-[1.25rem] mt-1.5 pl-1" id="newsletter-error" aria-live="polite">
+        <AnimatePresence mode="wait">
+          {status === "error" && (
+            <motion.p
+              key="error"
+              initial={{ opacity: 0, y: -4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              className="flex items-center gap-1.5 text-[12px] font-medium text-red-300"
+            >
+              <AlertCircle className="h-3.5 w-3.5 shrink-0" /> {errorMsg}
+            </motion.p>
+          )}
+          {status === "success" && (
+            <motion.p
+              key="success-hint"
+              initial={{ opacity: 0, y: -4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              className="flex items-center gap-1.5 text-[12px] font-medium text-emerald-300"
+            >
+              <CheckCircle2 className="h-3.5 w-3.5 shrink-0" /> Redirecting to your mail app — just hit send there.
+            </motion.p>
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+}
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -29,21 +175,7 @@ export function Footer() {
               Weekly recovery tips, delivered to your inbox.
             </h3>
           </div>
-          <form
-            onSubmit={(e) => e.preventDefault()}
-            className="flex items-center gap-2 rounded-full bg-white/10 backdrop-blur border border-white/20 p-1.5 pl-5 shadow-glow"
-          >
-            <Mail className="h-4 w-4 text-white/50 shrink-0" />
-            <input
-              type="email"
-              required
-              placeholder="you@example.com"
-              className="bg-transparent flex-1 outline-none text-sm placeholder:text-white/40 text-white py-2 min-w-0"
-            />
-            <button className="inline-flex shrink-0 items-center gap-2 rounded-full gradient-teal px-5 py-2.5 text-sm font-semibold text-white shadow-soft hover:shadow-glow transition">
-              Subscribe <Send className="h-3.5 w-3.5" />
-            </button>
-          </form>
+          <NewsletterForm />
         </div>
       </div>
 

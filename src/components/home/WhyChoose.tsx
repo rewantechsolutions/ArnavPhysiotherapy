@@ -10,24 +10,26 @@ const items = [
 
 export function WhyChoose() {
   return (
-    <section className="py-20 md:py-28">
-      <div className="container-page grid grid-cols-2 lg:grid-cols-4 gap-5">
-        {items.map((it, i) => (
-          <motion.div
-            key={it.title}
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: i * 0.08 }}
-            className="rounded-3xl bg-white border border-border p-6 card-lift card-lift-hover shadow-card"
-          >
-            <div className="grid h-12 w-12 place-items-center rounded-2xl gradient-teal text-white shadow-soft">
-              <it.icon className="h-5 w-5" />
-            </div>
-            <h3 className="mt-5 text-lg font-bold">{it.title}</h3>
-            <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{it.desc}</p>
-          </motion.div>
-        ))}
+    <section className="overflow-hidden py-20 md:py-28">
+      <div className="container-page">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-5 lg:grid-cols-4">
+          {items.map((it, i) => (
+            <motion.div
+              key={it.title}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.08 }}
+              className="w-full min-w-0 rounded-3xl border border-border bg-white p-6 shadow-card card-lift card-lift-hover"
+            >
+              <div className="grid h-12 w-12 place-items-center rounded-2xl gradient-teal text-white shadow-soft">
+                <it.icon className="h-5 w-5" />
+              </div>
+              <h3 className="mt-5 text-lg font-bold">{it.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{it.desc}</p>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </section>
   );

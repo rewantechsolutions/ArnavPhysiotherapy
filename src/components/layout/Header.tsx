@@ -11,6 +11,7 @@ import { doctorProfile, nav, site } from "@/lib/site";
 import { services, conditions, galleryItems } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import { SearchDialog } from "@/components/search/SearchDialog";
+import { closeSearch, getSearchState, openSearch } from "@/lib/search-store";
 import logo from '../../assets/logo.png';
 
 const serviceIcons: Record<string, any> = {
@@ -156,7 +157,6 @@ const CLOSE_DELAY = 300;
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
   const [openMega, setOpenMega] = useState<string | null>(null);
   const [mobileSub, setMobileSub] = useState<string | null>(null);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
@@ -214,7 +214,12 @@ export function Header() {
     const on = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
-        setSearchOpen((v) => !v);
+        const state = getSearchState();
+        if (state.open) {
+          closeSearch();
+        } else {
+          openSearch();
+        }
       }
       if (e.key === "Escape") openMegaImmediate(null);
     };
@@ -327,10 +332,10 @@ export function Header() {
           </div>
 
           <div className="flex items-center gap-2">
-            <button onClick={() => setSearchOpen(true)} aria-label="Search" className="grid h-11 w-11 shrink-0 place-items-center rounded-full gradient-teal text-white shadow-soft hover:scale-105 transition">
+            <button onClick={() => openSearch()} aria-label="Search" className="grid h-11 w-11 shrink-0 place-items-center rounded-full gradient-teal text-white shadow-soft hover:scale-105 transition">
               <Search className="h-4 w-4" />
             </button>
-            {/* <button aria-label="Open search" onClick={() => setSearchOpen(true)} className="md:hidden grid h-10 w-10 place-items-center rounded-full border border-border text-foreground/70">
+            {/* <button aria-label="Open search" onClick={() => openSearch()} className="md:hidden grid h-10 w-10 place-items-center rounded-full border border-border text-foreground/70">
               <Search className="h-4 w-4" />
             </button> */}
             <Link to="/book" className="hidden sm:inline-flex items-center gap-2 rounded-full gradient-teal px-5 py-2.5 text-sm font-semibold text-white shadow-soft hover:shadow-glow transition-all hover:-translate-y-0.5">
@@ -393,7 +398,7 @@ export function Header() {
           )}
         </AnimatePresence>
       </div>
-      <SearchDialog open={searchOpen} onOpenChange={setSearchOpen} />
+      <SearchDialog />
     </header>
   );
 }

@@ -8,6 +8,8 @@ import {
 import { services, conditions } from "@/lib/data";
 import { nav } from "@/lib/site";
 import { cn } from "@/lib/utils";
+import { closeSearch, openSearch } from "@/lib/search-store";
+import { useSearchState } from "@/lib/useSearchState";
 
 type Group = "Services" | "Conditions" | "Pages";
 
@@ -69,8 +71,19 @@ function highlight(text: string, query: string) {
   );
 }
 
-export function SearchDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
-  const [query, setQuery] = useState("");
+/**
+ * Self-contained search dialog. Doesn't need `open`/`onOpenChange` props —
+ * it reads/writes its visibility + initial query from the shared search
+ * store (see `src/lib/search-store.ts`). Any component in the app can call
+ * `openSearch("some query")` to open this with results already showing.
+ *
+ * Mount it once near the root of your app (e.g. in the root layout or
+ * Header), e.g.  <SearchDialog />
+ */
+export function SearchDialog() {
+  const { open, query: initialQuery } = useSearchState();
+
+  const [query, setQuery] = useState(initialQuery);
   const [activeIndex, setActiveIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
@@ -91,19 +104,29 @@ export function SearchDialog({ open, onOpenChange }: { open: boolean; onOpenChan
     return GROUP_ORDER.map((g) => [g, map.get(g)!] as const).filter(([, items]) => items.length > 0);
   }, [results]);
 
+  // Whenever the dialog opens, pick up whatever query it was opened with
+  // (instead of always resetting to empty) and focus the input with the
+  // cursor placed at the end of the pre-filled text.
   useEffect(() => {
     if (open) {
-      setQuery("");
+      setQuery(initialQuery);
       setActiveIndex(0);
-      const t = setTimeout(() => inputRef.current?.focus(), 60);
+      const t = setTimeout(() => {
+        const el = inputRef.current;
+        if (el) {
+          el.focus();
+          el.setSelectionRange(el.value.length, el.value.length);
+        }
+      }, 60);
       return () => clearTimeout(t);
     }
-  }, [open]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, initialQuery]);
 
   useEffect(() => setActiveIndex(0), [query]);
 
   const goTo = (to: string) => {
-    onOpenChange(false);
+    closeSearch();
     navigate({ to });
   };
 
@@ -111,7 +134,7 @@ export function SearchDialog({ open, onOpenChange }: { open: boolean; onOpenChan
     function onKey(e: KeyboardEvent) {
       if (!open) return;
       if (e.key === "Escape") {
-        onOpenChange(false);
+        closeSearch();
       } else if (e.key === "ArrowDown") {
         e.preventDefault();
         setActiveIndex((i) => Math.min(i + 1, Math.max(results.length - 1, 0)));
@@ -137,7 +160,7 @@ export function SearchDialog({ open, onOpenChange }: { open: boolean; onOpenChan
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            onClick={() => onOpenChange(false)}
+            onClick={() => closeSearch()}
             className="fixed inset-0 z-[100] bg-slate-900/50 backdrop-blur-sm"
           />
 
@@ -158,13 +181,18 @@ export function SearchDialog({ open, onOpenChange }: { open: boolean; onOpenChan
                 <input
                   ref={inputRef}
                   value={query}
-                  onChange={(e) => setQuery(e.target.value)}
+                  onChange={(e) => {
+                    setQuery(e.target.value);
+                    // keep the store's query in sync so re-opens / refreshes
+                    // reflect the latest typed value too
+                    openSearch(e.target.value);
+                  }}
                   placeholder="Search treatments, conditions, pages…"
                   className="flex-1 bg-transparent text-[15px] text-foreground placeholder:text-muted-foreground outline-none"
                 />
                 <button
                   aria-label="Close search"
-                  onClick={() => onOpenChange(false)}
+                  onClick={() => closeSearch()}
                   className="grid h-8 w-8 shrink-0 place-items-center rounded-full text-muted-foreground hover:bg-muted transition"
                 >
                   <X className="h-4 w-4" />
@@ -219,7 +247,7 @@ export function SearchDialog({ open, onOpenChange }: { open: boolean; onOpenChan
                             <Link
                               key={item.id}
                               to={item.to}
-                              onClick={() => onOpenChange(false)}
+                              onClick={() => closeSearch()}
                               onMouseEnter={() => setActiveIndex(flatIndex)}
                               className={cn(
                                 "group flex items-center gap-3 rounded-2xl p-2.5 transition-colors",

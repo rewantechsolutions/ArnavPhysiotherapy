@@ -3,9 +3,10 @@ import { motion, AnimatePresence, useScroll, useTransform, useSpring } from "fra
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Search, ArrowRight, ChevronLeft, ChevronRight, Sparkles, ShieldCheck, Award } from "lucide-react";
 import { services } from "@/lib/data";
+import { openSearch } from "@/lib/search-store";
 import hero1 from "../../assets/hero1.jpg";
 import video1 from "../../assets/videos/video1.mp4";
-  import video2 from "../../assets/videos/video2.mp4";
+import video2 from "../../assets/videos/video2.mp4";
 import video3 from "../../assets/videos/video3.mp4";
 import video4 from "../../assets/videos/video4.mp4";
 import video5 from "../../assets/videos/video5.mp4";
@@ -170,8 +171,6 @@ export function Hero() {
         </motion.div>
       </AnimatePresence>
 
- 
-
       {/* arrows */}
       <button
         aria-label="Previous"
@@ -219,31 +218,35 @@ export function Hero() {
             </span>
           </motion.h1>
 
-          {/* Smart Hero Search — routes to matching service or condition */}
+          {/*
+            Smart Hero Search.
+            - Typing here no longer redirects the page. Instead it opens the
+              shared SearchDialog (see src/lib/search-store.ts) pre-filled
+              with whatever was typed, so live grouped results/suggestions
+              show up immediately — exactly like the navbar search.
+            - Picking a specific service from the dropdown still jumps
+              straight to that service page, since there's nothing to search.
+          */}
           <motion.form
             onSubmit={(e) => {
               e.preventDefault();
-              const q = query.trim().toLowerCase();
               if (service !== "all") {
                 window.location.href = `/services/${service}`;
                 return;
               }
-              if (!q) return;
-              const svc = services.find((x) => x.name.toLowerCase().includes(q) || x.slug.includes(q));
-              if (svc) { window.location.href = `/services/${svc.slug}`; return; }
-              window.location.href = `/services?q=${encodeURIComponent(q)}`;
+              openSearch(query.trim());
             }}
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.3 }}
-            className="mt-8 mx-auto max-w-2xl"
+            className="mt-8 mx-auto max-w-2xl px-4 sm:px-0"
           >
             <div className="flex items-center gap-1 rounded-full bg-white/95 backdrop-blur border border-white/30 p-1.5 shadow-glow">
-              <div className="relative">
+              <div className="relative shrink-0 max-w-[38%] sm:max-w-none">
                 <select
                   value={service}
                   onChange={(e) => setService(e.target.value)}
-                  className="appearance-none bg-transparent pl-5 pr-9 py-3 text-sm font-medium text-foreground outline-none rounded-full cursor-pointer border-r border-border"
+                  className="w-full appearance-none bg-transparent pl-3 sm:pl-5 pr-6 sm:pr-9 py-2.5 sm:py-3 text-xs sm:text-sm font-medium text-foreground outline-none rounded-full cursor-pointer border-r border-border truncate"
                 >
                   <option value="all">All Services</option>
                   {services.map((s) => (
@@ -251,13 +254,29 @@ export function Hero() {
                   ))}
                 </select>
               </div>
+
               <input
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search treatments, conditions…"
-                className="flex-1 bg-transparent px-3 py-3 text-sm outline-none placeholder:text-muted-foreground text-foreground"
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  // Open (or keep updating) the dialog live as the person
+                  // types, once there's enough to search meaningfully.
+                  if (service === "all" && e.target.value.trim().length > 1) {
+                    openSearch(e.target.value);
+                  }
+                }}
+                onFocus={() => {
+                  if (service === "all" && query.trim().length > 1) openSearch(query);
+                }}
+                placeholder="Search treatments…"
+                className="flex-1 min-w-0 bg-transparent px-2 sm:px-3 py-2.5 sm:py-3 text-sm outline-none placeholder:text-muted-foreground text-foreground"
               />
-              <button aria-label="Search" className="grid h-11 w-11 shrink-0 place-items-center rounded-full gradient-teal text-white shadow-soft hover:scale-105 transition">
+
+              <button
+                type="submit"
+                aria-label="Search"
+                className="grid h-9 w-9 sm:h-11 sm:w-11 shrink-0 place-items-center rounded-full gradient-teal text-white shadow-soft hover:scale-105 transition"
+              >
                 <Search className="h-4 w-4" />
               </button>
             </div>
