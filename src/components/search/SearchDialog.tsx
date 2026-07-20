@@ -10,7 +10,7 @@ import { nav } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { closeSearch, openSearch } from "@/lib/search-store";
 import { useSearchState } from "@/lib/Usesearchstate";
-
+// CHECKING WITH CIMMIT 
 type Group = "Services" | "Conditions" | "Pages";
 
 type ResultItem = {
