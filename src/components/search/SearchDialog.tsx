@@ -9,7 +9,7 @@ import { services, conditions } from "@/lib/data";
 import { nav } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { closeSearch, openSearch } from "@/lib/search-store";
-import { useSearchState } from "@/lib/useSearchState";
+import { useSearchState } from "@/lib/Usesearchstate";
 
 type Group = "Services" | "Conditions" | "Pages";
 
