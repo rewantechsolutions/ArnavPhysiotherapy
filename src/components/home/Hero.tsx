@@ -39,7 +39,7 @@ const slides: { eyebrow: string; image: string; video?: string }[] = [
   },
   {
     eyebrow: "Recover Faster • Return Stronger",
-     video: video5,
+    video: video5,
     image: ""
     // image: hero1,
   },
@@ -110,7 +110,7 @@ export function Hero() {
 
   // Restart playback whenever the video slide changes.
   useEffect(() => {
-    videoRef.current?.play().catch(() => {});
+    videoRef.current?.play().catch(() => { });
   }, [i]);
 
   const s = slides[i];
@@ -212,7 +212,10 @@ export function Hero() {
           >
             Expert Physiotherapy
             <br className="hidden sm:block" /> for{" "}
-            <span className="relative inline-block align-baseline text-gradient-teal">
+            <span
+              className="relative inline-block align-baseline whitespace-nowrap text-gradient-teal
+               text-[clamp(28px,8vw,64px)] sm:text-[clamp(36px,6vw,72px)]"
+            >
               {typedWord}
               <span className="ml-1 inline-block h-[0.85em] w-[3px] translate-y-[0.05em] bg-current align-middle [animation:hero-cursor-blink_1s_step-end_infinite]" />
             </span>
