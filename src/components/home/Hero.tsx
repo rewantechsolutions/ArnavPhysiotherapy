@@ -217,9 +217,9 @@ export function Hero() {
             <span className="relative inline-flex items-center align-baseline min-h-[44px] sm:min-h-[64px] md:min-h-[76px]">
               <span
                 className="relative inline-block whitespace-nowrap text-gradient-teal
-                 text-[clamp(28px,8vw,64px)] sm:text-[clamp(36px,6vw,72px)]"
+                 text-[clamp(28px,8vw,64px)] sm:text-[clamp(36px,6vw,72px)] line-hight-[1.05] "
               >
-                {typedWord || "\u00A0"}
+                {typedWord || "..."}
                 <span className="ml-1 inline-block h-[0.85em] w-[3px] translate-y-[0.05em] bg-current align-middle [animation:hero-cursor-blink_1s_step-end_infinite]" />
               </span>
             </span>
