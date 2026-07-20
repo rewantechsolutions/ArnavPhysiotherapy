@@ -72,9 +72,8 @@ function NewsletterForm() {
       <form
         onSubmit={handleSubmit}
         noValidate
-        className={`flex items-center gap-2 rounded-full bg-white/10 backdrop-blur border p-1.5 pl-5 shadow-glow transition-colors ${
-          status === "error" ? "border-red-400/60" : "border-white/20"
-        }`}
+        className={`flex items-center gap-2 rounded-full bg-white/10 backdrop-blur border p-1.5 pl-5 shadow-glow transition-colors ${status === "error" ? "border-red-400/60" : "border-white/20"
+          }`}
       >
         <Mail className={`h-4 w-4 shrink-0 ${status === "error" ? "text-red-300" : "text-white/50"}`} />
         <input
@@ -170,12 +169,17 @@ export function Footer() {
       <div className="relative border-b border-white/10">
         <div className="container-page py-10 grid gap-6 lg:grid-cols-2 lg:items-center">
           <div>
-            <div className="text-[11px] font-bold uppercase tracking-[0.22em] text-primary-glow">Stay Informed</div>
+            <div className="text-[11px] font-bold uppercase tracking-[0.22em] text-primary-glow">
+              Stay Informed
+            </div>
             <h3 className="mt-2 text-2xl md:text-3xl font-bold text-white leading-tight">
               Weekly recovery tips, delivered to your inbox.
             </h3>
           </div>
-          <NewsletterForm />
+
+          <div className="w-full">
+            <NewsletterForm />
+          </div>
         </div>
       </div>
 
