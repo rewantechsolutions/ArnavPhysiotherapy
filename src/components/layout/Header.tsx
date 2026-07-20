@@ -246,7 +246,7 @@ export function Header() {
         )}
       >
         <div className="container-page flex h-[70px] items-center justify-between gap-4">
-          <Link to="/" className="flex items-center justify-center">
+          <Link to="/" className="flex items-center justify-center -ml-6 ">
             <div className=" flex items-center justify-center overflow-hidden" style={{ width: "100px", height: "auto" }}>
               <img src={logo} alt="Arnav Physiotherapy Centre" className="w-full h-full object-contain" />
             </div>
